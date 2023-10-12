@@ -1,3 +1,24 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:231c84af25e18060be0f82718c95158c91463e0c1b18cd43bee5e33c1a004437
-size 1159
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+/// <b>Authors</b>
+/// <br>Arad Bozorgmehr (Vrglab)</br>
+[CreateAssetMenu(menuName = "Input System/Input Profile")]
+public class InputProfile : ScriptableObject
+{
+    public InputIconMappingProfile RelativeIconMappings;
+    public List<InputData> inputData;
+}
+
+/// <b>Authors</b>
+/// <br>Arad Bozorgmehr (Vrglab)</br>
+[Serializable]
+public struct InputData
+{
+    public string ActionID;
+
+    public InputAction Bindings;
+}

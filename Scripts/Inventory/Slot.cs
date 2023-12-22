@@ -1,3 +1,55 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:20c5a274207945aed5b2e8a038e134aaf5affd54d969c2bb01737b7335e7aef8
-size 1396
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Slot<t>
+{
+    private Stack<t> stackHandler;
+    public bool Full { get; private set; } = false;
+    public Type ItemTypeToAccept { get; private set; }
+    public Type ActiveItemType { get; private set; }
+
+    public Slot(Type itemType)
+    {
+        stackHandler = new Stack<t>(itemType);
+        ItemTypeToAccept = itemType;
+    }
+
+    public Slot(Type itemType, int maxStackSize)
+    {
+        stackHandler = new Stack<t>(itemType, maxStackSize);
+        ItemTypeToAccept = itemType;
+    }
+
+    /// <summary>
+    /// Push's the given item into the stack if it can
+    /// </summary>
+    /// <param name="item">The item to push</param>
+    /// <b>Authors</b>
+    /// <br>Arad Bozorgmehr (Vrglab)</br>
+    public void Push(t item)
+    {
+        if (stackHandler.currentStackSize < stackHandler.maxSize)
+        {
+            stackHandler.Put(item);
+            ActiveItemType = item.GetType();
+            Full = true;
+        }  
+    }
+
+    /// <summary>
+    /// Remove's the given item from the stack if it can
+    /// </summary>
+    /// <param name="item">The item to remove</param>
+    /// <b>Authors</b>
+    /// <br>Arad Bozorgmehr (Vrglab)</br>
+    public void Remove(t item)
+    {
+        stackHandler.Remove(item);
+        if (Full && stackHandler.currentStackSize <= 0)
+        {
+            Full = false;
+        }
+    }
+}

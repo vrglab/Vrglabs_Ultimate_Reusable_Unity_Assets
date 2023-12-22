@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 /// </summary>
 /// <b>Authors</b>
 /// <br>Arad Bozorgmehr (Vrglab)</br>
-public class Utils
+public static class Utils
 {
     /// <summary>
     /// Get's the component's in the given GameObject that have the given interface attached
@@ -163,6 +163,23 @@ public class Utils
     public static Vector2 LooAt(Vector2 us, Vector2 subject)
     {
         return (subject - new Vector2(us.x, us.y));
+    }
+
+    public static bool IsChildOf(this Type child, Type parent)
+    {
+        // Check if the childType is a direct child of the firstLayerParentType
+        if (child.BaseType == parent)
+        {
+            return true;
+        }
+
+        // Check if childType has a base type and recursively check its base type
+        if (child.BaseType != null)
+        {
+            return IsChildOf(child.BaseType, parent);
+        }
+
+        return false;
     }
 }
 

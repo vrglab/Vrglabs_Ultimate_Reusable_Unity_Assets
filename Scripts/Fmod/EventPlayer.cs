@@ -18,7 +18,7 @@ public class EventPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays a instance of the Refrance
+    /// Plays a instance of the Reference
     /// </summary>
     /// <b>Authors</b>
     /// <br>Arad Bozorgmehr (Vrglab)</br>
@@ -45,7 +45,7 @@ public class EventPlayer : MonoBehaviour
     /// </summary>
     /// <b>Authors</b>
     /// <br>Arad Bozorgmehr (Vrglab)</br>
-    public void InstatStop()
+    public void InstantStop()
     {
         instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         instance.release();

@@ -44,7 +44,7 @@ public class Inventory<t>
         {
             if (slot.Full)
             {
-                if (item.GetType().IsInstanceOfType(slot.ItemTypeToAccept))
+                if (item.GetType().IsAssignableFrom(slot.ActiveItemType))
                 {
                     slot.Push(item);
                     return;
@@ -68,7 +68,7 @@ public class Inventory<t>
     /// <br>Arad Bozorgmehr (Vrglab)</br>
     public void Remove(t item, int slot)
     {
-        if (item.GetType().IsInstanceOfType(slots[slot].ItemTypeToAccept))
+        if (item.GetType().IsChildOf(slots[slot].ItemTypeToAccept))
         {
             slots[slot].Remove(item);
         }

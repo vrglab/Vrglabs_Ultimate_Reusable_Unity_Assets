@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:92fd86ea4a627154e3b7481516d565e32673f49709001692258f38befeba4c22
-size 455
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class ItemType : ScriptableObject
+{
+    public new string name;
+    public int StackSize;
+
+    /// <summary>
+    /// Called When the item Is used
+    /// </summary>
+    /// <param name="args">The passed arguments</param>
+    /// <b>Authors</b>
+    /// <br>Arad Bozorgmehr (Vrglab)</br>
+    public abstract void OnUse(params object[] args);
+}

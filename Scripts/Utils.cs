@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -78,7 +79,7 @@ public static class Utils
     }
 
     /// <summary>
-    /// Executes a Action after the timer run's out
+    /// Executes a Action after the timer runData's out
     /// </summary>
     /// <param name="timeInSeconds">The time to wait for</param>
     /// <param name="action">What to execute</param>
@@ -180,6 +181,19 @@ public static class Utils
         }
 
         return false;
+    }
+
+    public static string RemoveSpecialCharacters(this string str)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (char c in str)
+        {
+            if (c != '\n'  && c != '\r' && c != '\t' && c != '\a' && c != '\f')
+            {
+                sb.Append(c);
+            }
+        }
+        return sb.ToString();
     }
 }
 

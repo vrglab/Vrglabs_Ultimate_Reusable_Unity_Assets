@@ -28,14 +28,9 @@ public class CameraEffects : Instancable<CameraEffects>
     [Header("Shake Controll")]
     public CameraShakeData shakeData;
 
-    [Header("Fade Control")]
-    public GameObject FadeObj;
-    public float fadeSpeed;
-    public float fadeTimeSpeed;
-
+    
     //Private variables
     IEnumerator activeZoom;
-    IEnumerator activeFade;
 
     public void OnEnable()
     {
@@ -44,7 +39,6 @@ public class CameraEffects : Instancable<CameraEffects>
 
     private void Start()
     {
-        FadeOut();
         ZoomToNormal();
     }
 
@@ -85,33 +79,6 @@ public class CameraEffects : Instancable<CameraEffects>
     {
         Zoom(ZoomMin);
     }
-
-    /// <summary>
-    /// Fade's the level in based on the Unity ui values
-    /// </summary>
-    public void FadeIn()
-    {
-        if (activeFade != null)
-        {
-            StopCoroutine(activeFade);
-        }
-        activeFade = FadeToIn();
-        StartCoroutine(activeFade);
-    }
-
-    /// <summary>
-    /// Fades the level out based on the Unity ui values
-    /// </summary>
-    public void FadeOut()
-    {
-        if (activeFade != null)
-        {
-            StopCoroutine(activeFade);
-        }
-        activeFade = FadeToOut();
-        StartCoroutine(activeFade);
-    }
-
     /// <summary>
     /// Shake's the camera based on the given values
     /// </summary>
@@ -137,32 +104,6 @@ public class CameraEffects : Instancable<CameraEffects>
         {
             yield return cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, zoomTo, ZoomSpeed);
         }
-    }
-
-    private IEnumerator FadeToOut()
-    {
-        CanvasGroup group = FadeObj.GetComponent<CanvasGroup>();
-
-        while (group.alpha > 0)
-        {
-            group.alpha -= fadeSpeed;
-            yield return new WaitForSeconds(fadeTimeSpeed);
-        }
-        group.alpha = 0;
-        yield return null;
-    }
-
-    private IEnumerator FadeToIn()
-    {
-        CanvasGroup group = FadeObj.GetComponent<CanvasGroup>();
-
-        while (group.alpha < 1)
-        {
-            group.alpha += fadeSpeed;
-            yield return new WaitForSeconds(fadeTimeSpeed);
-        }
-        group.alpha = 1;
-        yield return null;
     }
 
     private IEnumerator shake(float duration, float magnitude)

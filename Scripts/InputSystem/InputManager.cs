@@ -10,7 +10,7 @@ using UnityEngine.Playables;
 
 /// <b>Authors</b>
 /// <br>Arad Bozorgmehr (Vrglab)</br>
-public class InputManager : Instancable<InputManager>
+public class InputManager : Singleton<InputManager>
 {
     public InputProfile profile;
 

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
+/// <summary>
+/// Helper class for item gathering of the player
+/// </summary>
 public class WorldItem : MonoBehaviour
 {
     public WorldObject ItemType;
@@ -20,7 +23,7 @@ public class WorldItem : MonoBehaviour
         {
             if (InputManager.Instance.GetKeyDown("pl_interaction"))
             {
-                PlayerInventory.Instance.Inventory.Put(ItemType);
+                //PlayerInventory.Instance.Inventory.Put(ItemType);
                 Debug.Log($"Added item named: {ItemType.name} into inventory");
                 Destroy(gameObject);
             }

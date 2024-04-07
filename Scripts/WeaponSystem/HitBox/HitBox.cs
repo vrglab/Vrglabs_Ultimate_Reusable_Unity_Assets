@@ -16,7 +16,7 @@ public class HitBox : MonoBehaviour
     {
         polygonCollider2 = GetComponent<PolygonCollider2D>();
         polygonCollider2.isTrigger = true;
-        transform.rotation = PlayerInventory.Instance.transform.rotation;
+        transform.rotation = playerPosition.rotation;
         try
         {
             Utils.StartCoroutine(Utils.TimedExecution(melee.attackDelayIntervall, () =>

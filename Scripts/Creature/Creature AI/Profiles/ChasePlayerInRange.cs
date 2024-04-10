@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:382b606c5185f9f4b7e2bd47ce724e6d0ee01d47616ce8b2ab39a93cb968b34d
-size 608
+using CleverCrow.Fluid.BTs.Trees;
+using Pathfinding;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "AiProfiles/ChasePlayerInRange")]
+public class ChasePlayerInRange : AiProfile
+{
+    public override BehaviorTreeBuilder BuildBehaviour(GameObject owner)
+    {
+        return base.BuildBehaviour(owner)
+            //Chase player if he is out of range
+            .Sequence().IsPlayerInRange().TurnMovementOff().End()
+            //Stop chasing if he is in range
+            .Sequence().IsPlayerInRange().ChasePlayer();
+    }
+}

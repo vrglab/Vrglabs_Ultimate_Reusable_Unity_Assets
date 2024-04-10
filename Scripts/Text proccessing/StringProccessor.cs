@@ -9,6 +9,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.TextCore.Text;
@@ -193,7 +194,22 @@ public class DefaultTokenFunctionalityHandlers
 
 
         GameObject image = new GameObject(sp.name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        image.GetComponent<RectTransform>().SetParent(GameObject.FindWithTag("MainCanvas").transform);
+        if(String.IsNullOrEmpty(ObjectToAttachTo))
+            image.GetComponent<RectTransform>().SetParent(GameObject.FindWithTag("MainCanvas").transform);
+        else
+            try
+            {
+                if (caller is GameObject)
+                {
+                    var obj = caller as GameObject;
+                    image.GetComponent<RectTransform>().SetParent(obj.transform);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                image.GetComponent<RectTransform>().SetParent(GameObject.FindWithTag("MainCanvas").transform);
+            }
         image.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, posY);
         image.GetComponent<RectTransform>().localScale = new Vector3(Width, Height, 0);
         image.GetComponent<Image>().sprite = sp;
@@ -203,8 +219,6 @@ public class DefaultTokenFunctionalityHandlers
             if (caller is GameObject)
             {
                 var obj = caller as GameObject;
-                image.GetComponent<RectTransform>().SetParent(obj.transform);
-
                 if (obj.name.Equals(ObjectToAttachTo))
                 {
                     Type type = Type.GetType(ParentComponent);
@@ -240,6 +254,38 @@ public class DefaultTokenFunctionalityHandlers
         for (int i = 0; i < spaceBetweenText; i++)
         {
             sb.Append(" ");
+        }
+        return sb.ToString();
+    }
+
+    public static string InpDevType(string act, object owner)
+    {
+        InputData id = InputManager.Instance.GetInputData(act);
+        
+        StringBuilder sb = new StringBuilder();
+
+        foreach (var binding in id.Bindings.bindings)
+        {
+            if (binding.path.Contains(InputManager.Instance.ActiveInputDevice.path.Remove(0,1)))
+            {
+                KeyIconMapping mappings = InputManager.Instance.GetKeyIconMapping(binding.path);
+                if(sb.Length > 0)
+                {
+                    try
+                    {
+                        if (!sb.ToString().Contains(mappings.Name))
+                            sb.Append(", " + mappings.Name);
+                    }
+                    catch (Exception e)
+                    {
+                       
+                    }
+                }
+                else
+                {
+                    sb.Append(mappings.Name);
+                }  
+            }
         }
         return sb.ToString();
     }

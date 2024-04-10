@@ -13,6 +13,7 @@ public class InputIconMappingProfile : ScriptableObject
 public struct KeyIconMapping
 {
     public Sprite Image;
+    public string Name;
     public List<string> paths;
 
     public bool PathContained(string path)
@@ -20,6 +21,18 @@ public struct KeyIconMapping
         foreach (var pathItem in paths)
         {
             if (pathItem.Contains(path))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool PathEquals(string path)
+    {
+        foreach (var pathItem in paths)
+        {
+            if (pathItem.Equate(path, 1))
             {
                 return true;
             }

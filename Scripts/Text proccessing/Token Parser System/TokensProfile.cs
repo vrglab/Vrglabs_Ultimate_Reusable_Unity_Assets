@@ -1,3 +1,137 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d0f6aa339f05128872ade74393d6e129918bcfc9f4612d9d52e0d63bc2b3d4ec
-size 3989
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Tokens profile")]
+public class TokensProfile : ScriptableObject
+{
+    public TokenType[] tokens =
+    {
+        new TokenType
+        {
+            ID = "InputAct",
+            Arguments = new TokenArgumentType[]
+            {
+                new TokenArgumentType
+                {
+                    ID = "Action",
+                    Type = Types.String
+                },
+                new TokenArgumentType
+                {
+                    ID = "keyStatus",
+                    Type = Types.String
+                }
+            }
+        },
+        new TokenType
+        {
+            ID = "Img",
+            Arguments = new TokenArgumentType[]
+            {
+                new TokenArgumentType
+                {
+                    ID = "spriteAsset",
+                    Type = Types.String
+                },
+                new TokenArgumentType
+                {
+                    ID = "posX",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "posY",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "Width",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "Height",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "spaceBetweenText",
+                    Type = Types.Int
+                },
+                new TokenArgumentType
+                {
+                    ID = "ObjectToAttachTo",
+                    Type= Types.String
+                },
+                new TokenArgumentType
+                {
+                    ID = "ParentComponent",
+                    Type= Types.String
+                },
+                new TokenArgumentType
+                {
+                    ID = "EventName",
+                    Type= Types.String
+                }
+            }
+        },
+        new TokenType
+        {
+            ID = "InputImg",
+            Arguments = new TokenArgumentType[]
+            {
+                new TokenArgumentType
+                {
+                    ID = "action",
+                    Type = Types.String
+                },
+                new TokenArgumentType
+                {
+                    ID = "keyimgindex",
+                    Type = Types.Int
+                },
+                new TokenArgumentType
+                {
+                    ID = "posX",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "posY",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "Width",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "Height",
+                    Type = Types.Float
+                },
+                new TokenArgumentType
+                {
+                    ID = "spaceBetweenText",
+                    Type = Types.Int
+                },
+                new TokenArgumentType
+                {
+                    ID = "ObjectToAttachTo",
+                    Type= Types.String
+                },
+                new TokenArgumentType
+                {
+                    ID = "ParentComponent",
+                    Type= Types.String
+                },
+                new TokenArgumentType
+                {
+                    ID = "EventName",
+                    Type= Types.String
+                }
+            }
+        }
+    };
+}

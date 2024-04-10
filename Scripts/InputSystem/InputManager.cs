@@ -10,7 +10,7 @@ using UnityEngine.Playables;
 
 /// <b>Authors</b>
 /// <br>Arad Bozorgmehr (Vrglab)</br>
-public class InputManager : Singleton<InputManager>
+public class InputManager : PersistantSingleton<InputManager>
 {
     public InputProfile profile;
 
@@ -94,13 +94,32 @@ public class InputManager : Singleton<InputManager>
         {
             foreach (var binding in in_d.Bindings.bindings)
             {
-                if (iconMapping.PathContained(binding.path) && iconMapping.PathContained(ActiveInputDevice.path.Remove(0, 1)))
+                if (iconMapping.PathEquals(binding.path) && iconMapping.PathContained(ActiveInputDevice.path.Remove(0, 1)))
                 {
                     sprites.Add(iconMapping.Image);
                 }
             }
         }
         return sprites;
+    }
+
+    /// <summary>
+    /// Get's us the <seealso cref="KeyIconMapping"/> for the key requested
+    /// </summary>
+    /// <param name="path">The key path</param>
+    /// <returns>The found KeyIconMapping</returns>
+    /// <b>Authors</b>
+    /// <br>Arad Bozorgmehr (Vrglab)</br>
+    public KeyIconMapping GetKeyIconMapping(string path)
+    {
+        foreach (var iconMapping in profile.RelativeIconMappings.KeyIcons)
+        {
+            if (iconMapping.PathEquals(path) && iconMapping.PathContained(ActiveInputDevice.path.Remove(0, 1)))
+            {
+              return iconMapping;
+            }
+        }
+        return default;
     }
 
 

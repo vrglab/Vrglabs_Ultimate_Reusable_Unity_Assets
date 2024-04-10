@@ -1,3 +1,4 @@
+using FMOD;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -99,12 +100,16 @@ public static class Utils
     /// <b>Authors</b>
     /// <br>Arad Bozorgmehr (Vrglab)</br>
     /// <br>Leon Hefling (700Noel)</br>
-    public static void StartCoroutine(IEnumerator Coroutine, float waitTime = 0.01f)
+    public static void StartCoroutine(IEnumerator Coroutine, float waitTime = 0.01f, GameObject gameObject = null)
     {
-        GameObject gameObject = new GameObject("Coroutine");
-        gameObject.AddComponent<CoroutineStarter>().StartCoroutine(Coroutine);
-        MonoBehaviour.Destroy(gameObject, waitTime);
+        if(gameObject == null)
+            gameObject = new GameObject("Coroutine");
 
+        gameObject.AddComponent<CoroutineStarter>().StartCoroutine(Coroutine);
+        if(gameObject.name == "Coroutine")
+            MonoBehaviour.Destroy(gameObject, waitTime);
+        else
+            MonoBehaviour.Destroy(gameObject.GetComponent<CoroutineStarter>(), waitTime);
     }
 
     private class CoroutineStarter : MonoBehaviour
@@ -194,6 +199,21 @@ public static class Utils
             }
         }
         return sb.ToString();
+    }
+
+    public static bool Equate(this string str, string st2, int start_pos)
+    {
+        bool result = true;
+        if (str.Length != st2.Length)
+            return false;
+        for (int i = start_pos; i < str.Length; i++)
+        {
+            if (str[i] != st2[i])
+            {
+                result = false;
+            }
+        }
+        return result;
     }
 }
 

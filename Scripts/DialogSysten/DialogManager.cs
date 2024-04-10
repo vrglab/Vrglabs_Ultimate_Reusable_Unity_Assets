@@ -1,3 +1,4 @@
+using System;
 using Ink.Runtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,14 @@ public class DialogManager : Instancable<DialogManager>
     {
         LocalizationManager.Instance.OnLangChanged.AddListener((lang) =>
         {
-            DialogUIHandler.Instance.SetPrimaryStoryText(LocalizationManager.Instance.GetMultiDataEntry(CurrentStory.Continue()).Property("data").Value.ToString());
+            try
+            {
+                DialogUIHandler.Instance.SetPrimaryStoryText(LocalizationManager.Instance.GetMultiDataEntry(CurrentStory.Continue()).Property("data").Value.ToString());
+            }
+            catch (Exception e)
+            {
+                
+            }
         });
     }
 

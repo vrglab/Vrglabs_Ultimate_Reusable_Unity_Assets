@@ -1,6 +1,9 @@
 # Vrglabs Ultimate Reusable Unity Assets
 This is my personal collection of codes and images and systems i built tthrought my 5 years of work with unity
 
+> [!CAUTION]
+> Some of the systems in the scripts folder are dependent on things listed in the Libraries folder
+
 # Credits To assets made by other people 
 ## Libaries folder
 1. Astar Pathfinding by [Aron Granberg](http://www.arongranberg.com)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -94,10 +95,20 @@ public class InputManager : PersistantSingleton<InputManager>
         {
             foreach (var binding in in_d.Bindings.bindings)
             {
-                if (iconMapping.PathEquals(binding.path) && iconMapping.PathContained(ActiveInputDevice.path.Remove(0, 1)))
+                if(Keyboard.current != null && Gamepad.current == null)
                 {
-                    sprites.Add(iconMapping.Image);
+                    if (iconMapping.PathEquals(binding.path))
+                    {
+                        sprites.Add(iconMapping.Image);
+                    }
+                } else
+                {
+                    if (iconMapping.PathEquals(binding.path) && iconMapping.PathContained(ActiveInputDevice.path.Remove(0, 1)))
+                    {
+                        sprites.Add(iconMapping.Image);
+                    }
                 }
+                
             }
         }
         return sprites;
@@ -197,5 +208,11 @@ public class InputManager : PersistantSingleton<InputManager>
         {
             ActiveInputDevice = device;
         }
+    }
+
+    public bool GetKeyHeld(string actionID)
+    {
+        InputData in_d = GetInputData(actionID);
+        return in_d.Bindings.IsPressed();
     }
 }

@@ -2,6 +2,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -84,6 +85,34 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
                         {
                             Id = id,
                             MultiDataLang = JObject.Parse(dataEntry.Value.ToString())
+                        });
+                    }
+                }
+
+                if(data.Name == "Conditional")
+                {
+                    foreach (var dataEntry in data.Children<JObject>().Properties())
+                    {
+                        var id = dataEntry.Name;
+                        string dat= "";
+                        foreach (var conditional_entry in dataEntry.Children<JObject>().Properties())
+                        {
+                            foreach (var conditional_entry_properties in conditional_entry.Children<JObject>())
+                            {
+                                Type loaded_condittion_class = Type.GetType(conditional_entry_properties.Property("Condition_class").Value.ToString());
+                                MethodInfo method = loaded_condittion_class.GetMethod(conditional_entry_properties.Property("Test_Condition_func_name").Value.ToString());
+                                bool result = (bool)method.Invoke(null, new object[] { });
+                                if (result)
+                                {
+                                    dat = conditional_entry_properties.Property("OnTrue").Value.ToString();
+                                    break;
+                                }
+                            } 
+                        }
+                        enteryList.Add(new LangData()
+                        {
+                            Id = id,
+                            langEntery = new LanguageEntry(dat)
                         });
                     }
                 }

@@ -133,17 +133,7 @@ public static class Utils
     /// <br>Leon Hefling (700Noel)</br>
     public static IEnumerator NumberedExecution(int amount, int waitPerAmount, Action action, Action OnDone = default)
     {
-        for (int i = 0; i < amount; i++)
-        {
-            action.Invoke();
-            if (i + 1 == amount)
-            {
-                if (OnDone != null)
-                    OnDone.Invoke();
-            }
-            yield return new WaitForSeconds(waitPerAmount);
-        }
-        yield return null;
+        yield return NumberedExecution(amount, (float)waitPerAmount, action, OnDone);
     }
 
     /// <summary>
@@ -162,7 +152,8 @@ public static class Utils
             action.Invoke();
             if (i + 1 == amount && OnDone != null)
             {
-                OnDone.Invoke();
+                if (OnDone != null)
+                    OnDone.Invoke();
             }
             yield return new WaitForSeconds(waitPerAmount);
         }

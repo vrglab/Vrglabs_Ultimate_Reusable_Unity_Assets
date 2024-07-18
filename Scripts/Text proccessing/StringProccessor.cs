@@ -184,7 +184,16 @@ public class DefaultTokenFunctionalityHandlers
     /// <br>Arad Bozorgmehr (Vrglab)</br>
     public static string InputImg(string action, int keyimgindex, float posX, float posY, float Width, float Height, int spaceBetweenText, string ObjectToAttachTo, string ParentComponent, string EventName, object caller)
     {
-        Sprite sp = InputManager.Instance.GetIcons(action)[keyimgindex];
+        Sprite sp = null;
+        try
+        {
+            sp = InputManager.Instance.GetIcons(action)[keyimgindex];
+        }
+        catch (Exception e)
+        {
+            
+        }
+        
 
         if (sp == null)
         {

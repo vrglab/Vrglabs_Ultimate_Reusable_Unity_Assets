@@ -2,9 +2,14 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Timers;
 using UnityEngine;
 using UnityEngine.Events;
+using static LocalizationManager;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class LocalizationManager : PersistantSingleton<LocalizationManager>
 {
@@ -17,9 +22,8 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
 
     public UnityEvent<string> OnLangChanged = new UnityEvent<string>();
 
-    protected override void Awake()
+    protected void Start()
     {
-        base.Awake();
         var ExternalLangDirectory = Application.streamingAssetsPath + "/Langs";
         if (!Directory.Exists(ExternalLangDirectory))
         {
@@ -38,11 +42,20 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
             }
         }
 
-        var systemLang = Application.systemLanguage.ToString();
-        if (!loadedLanguages.ContainsKey(systemLang))
+        var systemLang = "en";
+        try
         {
-            systemLang = "English";
+            systemLang = LauncherSystemHandler.Instance.GetLanguage().ToString().Substring(0, 2);
+            if (!loadedLanguages.ContainsKey(systemLang))
+            {
+                systemLang = "en";
+            }
         }
+        catch (Exception e)
+        {
+            Debug.LogError("There was a error getting the system language defaulting to english");
+            systemLang = "en";
+        }  
         ChangeLang(systemLang);
     }
 
@@ -57,68 +70,57 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
         JObject LoadedObject = JObject.Parse(File.ReadAllText(filePath));
 
         string sl = LoadedObject.GetValue("lang").Value<string>();
-        List<LangData> enteryList = new List<LangData>();
+        List<LangData> entryList = new List<LangData>();
 
         if (!loadedLanguages.ContainsKey(sl))
         {
-            foreach (var data in LoadedObject.Properties())
+            foreach (var data in LoadedObject.GetValue("data").Value<JObject>().Properties())
             {
-                if (data.Name == "entry")
+                try
                 {
-                    foreach (var entry in data.Children<JObject>().Properties())
+                    if (data.Type == JTokenType.Property)
                     {
-                        enteryList.Add(new LangData()
+                        if (data.Value.Type == JTokenType.Object)
                         {
-                            Id = entry.Name,
-                            langEntery = new LanguageEntry(entry.Value.ToString())
-                        });
-                    }
-                }
-
-                if (data.Name == "MultiDataEntry")
-                {
-                    foreach (var dataEntry in data.Children<JObject>().Properties())
-                    {
-                        var id = dataEntry.Name;
-
-                        enteryList.Add(new LangData()
-                        {
-                            Id = id,
-                            MultiDataLang = JObject.Parse(dataEntry.Value.ToString())
-                        });
-                    }
-                }
-
-                if(data.Name == "Conditional")
-                {
-                    foreach (var dataEntry in data.Children<JObject>().Properties())
-                    {
-                        var id = dataEntry.Name;
-                        string dat= "";
-                        foreach (var conditional_entry in dataEntry.Children<JObject>().Properties())
-                        {
-                            foreach (var conditional_entry_properties in conditional_entry.Children<JObject>())
+                            JObject parsed_obj = (JObject)data.Value;
+                            entryList.Add(new LangData()
                             {
-                                Type loaded_condittion_class = Type.GetType(conditional_entry_properties.Property("Condition_class").Value.ToString());
-                                MethodInfo method = loaded_condittion_class.GetMethod(conditional_entry_properties.Property("Test_Condition_func_name").Value.ToString());
-                                bool result = (bool)method.Invoke(null, new object[] { });
-                                if (result)
-                                {
-                                    dat = conditional_entry_properties.Property("OnTrue").Value.ToString();
-                                    break;
-                                }
-                            } 
+                                Id = data.Name,
+                                StringData = new LanguageEntry<string>(data.Value.ToString()),
+                                JsonData = new LanguageEntry<JObject>(parsed_obj)
+                            });
                         }
-                        enteryList.Add(new LangData()
+                        else if (data.Value.Type == JTokenType.Array)
                         {
-                            Id = id,
-                            langEntery = new LanguageEntry(dat)
-                        });
+                            JArray parsed_array = (JArray)data.Value;
+                            var id = data.Name;
+                            object dat = null;
+                            ProcessConditionalEntry<JArray>(parsed_array, ref dat);
+                            entryList.Add(new LangData()
+                            {
+                                Id = id,
+                                StringData = new LanguageEntry<string>(dat?.ToString()),
+                                conditional = true,
+                                JsonArrayData = new LanguageEntry<JArray>(parsed_array)
+                                
+                            });
+                        } else if(data.Value.Type == JTokenType.String)
+                        {
+                            entryList.Add(new LangData()
+                            {
+                                Id = data.Name,
+                                StringData = new LanguageEntry<string>(data.Value.ToString())
+                            });
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
                 }
             }
 
-            loadedLanguages.Add(sl, enteryList);
+            loadedLanguages.Add(sl, entryList);
         }
     }
 
@@ -142,8 +144,8 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
             {
                 if (entry.Id.Equals(id.RemoveSpecialCharacters()))
                 {
-                    cachedData.Add(id.RemoveSpecialCharacters(), entry.langEntery.Value);
-                    return entry.langEntery.Value;
+                    cachedData.Add(id.RemoveSpecialCharacters(), entry.StringData.Value);
+                    return entry.StringData.Value;
                 }
             }
         }
@@ -170,7 +172,7 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
             {
                 if (entry.Id.Equals(id.RemoveSpecialCharacters()))
                 {
-                    return entry.MultiDataLang;
+                    return (JObject)entry.JsonData.Value;
                 }
             }
         }
@@ -198,6 +200,24 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
             }
         }
         return null;
+    }
+
+    public void RefreshConditionals()
+    {
+        foreach (LangData dat in loadedLanguages[LangID])
+        {
+            if (dat.conditional)
+            {
+                RefreshConditional(dat);
+            }
+        }
+    }
+
+    public void RefreshConditional(LangData data)
+    {
+        object dat = null;
+        ProcessConditionalEntry<JArray>(data.JsonArrayData.Value, ref dat);
+        data.StringData = new LanguageEntry<string>(dat?.ToString());
     }
 
     /// <summary>
@@ -235,12 +255,87 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
         OnLangChanged.Invoke(langID);
     }
 
-    [Serializable]
-    public struct LanguageEntry
+    void ProcessConditionalEntry<J>(J data, ref object dat) where J : JToken
     {
-        public string Value;
+        if (data.Type == JTokenType.Object)
+        {
+            
+            Type loaded_condition_class = Type.GetType(data["Condition_class"].ToString());
+            MethodInfo method = loaded_condition_class.GetMethod(data["Test_Condition_func_name"].ToString());
+            bool result = (bool)method.Invoke(null, new object[] { });
 
-        public LanguageEntry(string value)
+            if (result)
+            {
+                if (data["OnTrue"] != null)
+                {
+                    JToken onTrue = data["OnTrue"];
+                    if (onTrue.Type == JTokenType.Object || onTrue.Type == JTokenType.Array)
+                    {
+                        ProcessConditionalEntry<JObject>((JObject)onTrue, ref dat);
+                    }
+                    else
+                    {
+                        dat = onTrue.ToString();
+                    }
+                }
+            }
+            else
+            {
+                if (data["OnFalse"] != null)
+                {
+                    JToken onFalse = data["OnFalse"];
+                    if (onFalse.Type == JTokenType.Object || onFalse.Type == JTokenType.Array)
+                    {
+                        ProcessConditionalEntry<JObject>((JObject)onFalse, ref dat);
+                    }
+                    else
+                    {
+                        dat = onFalse.ToString();
+                    }
+                }
+            }
+        }
+        else if (data.Type == JTokenType.Array)
+        {
+            foreach (var conditionalEntry in data.Children<JObject>())
+            {
+                var conditionClassToken = conditionalEntry.Property("Condition_class");
+                var testConditionFuncNameToken = conditionalEntry.Property("Test_Condition_func_name");
+                if (conditionClassToken != null && testConditionFuncNameToken != null)
+                {
+                    Type loadedConditionClass = Type.GetType(conditionClassToken.Value.ToString());
+                    MethodInfo method = loadedConditionClass.GetMethod(testConditionFuncNameToken.Value.ToString());
+                    bool conditionResult = (bool)method.Invoke(null, new object[] { });
+
+                    if (conditionResult)
+                    {
+                        var onTrueToken = conditionalEntry.Property("OnTrue");
+                        if (onTrueToken != null)
+                        {
+                            ProcessConditionalEntry<JObject>((JObject)onTrueToken.Value, ref dat);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        var onFalseToken = conditionalEntry.Property("OnFalse");
+                        if (onFalseToken != null)
+                        {
+                            ProcessConditionalEntry<JObject>((JObject)onFalseToken.Value, ref dat);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [Serializable]
+    public struct LanguageEntry<t>
+    {
+        public t Value;
+
+        public LanguageEntry(t value)
         {
             Value = value;
         }
@@ -250,8 +345,10 @@ public class LocalizationManager : PersistantSingleton<LocalizationManager>
     public struct LangData
     {
         public string Id;
-        public LanguageEntry langEntery;
-        public JObject MultiDataLang;
+        public bool conditional;
+        public LanguageEntry<JObject> JsonData;
+        public LanguageEntry<JArray> JsonArrayData;
+        public LanguageEntry<string> StringData;
     }
 }
 

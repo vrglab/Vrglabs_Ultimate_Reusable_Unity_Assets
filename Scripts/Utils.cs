@@ -1,9 +1,11 @@
 using FMOD;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -171,6 +173,53 @@ public static class Utils
         return (subject - new Vector2(us.x, us.y));
     }
 
+    public static object ConvertToBestType(string input)
+    {
+        // Try to convert to int
+        if (int.TryParse(input, out int intResult))
+        {
+            return intResult;
+        }
+
+        // Try to convert to float
+        if (float.TryParse(input, out float floatResult))
+        {
+            return floatResult;
+        }
+
+        // Try to convert to bool
+        if (bool.TryParse(input, out bool boolResult))
+        {
+            return boolResult;
+        }
+
+        // Try to convert to binary
+        if (IsBinary(input))
+        {
+            return ConvertBinaryToInt(input);
+        }
+
+        // If all conversions fail, return the original string
+        return input;
+    }
+
+    private static bool IsBinary(string input)
+    {
+        // Check if the string is a valid binary number (consists of only 0s and 1s)
+        return Regex.IsMatch(input, "^[01]+$");
+    }
+
+    private static int ConvertBinaryToInt(string binary)
+    {
+        // Convert binary string to integer
+        return Convert.ToInt32(binary, 2);
+    }
+}
+
+
+public static class Extensions
+{
+
     public static bool IsChildOf(this Type child, Type parent)
     {
         // Check if the childType is a direct child of the firstLayerParentType
@@ -193,7 +242,7 @@ public static class Utils
         StringBuilder sb = new StringBuilder();
         foreach (char c in str)
         {
-            if (c != '\n'  && c != '\r' && c != '\t' && c != '\a' && c != '\f')
+            if (c != '\n' && c != '\r' && c != '\t' && c != '\a' && c != '\f')
             {
                 sb.Append(c);
             }
@@ -214,6 +263,49 @@ public static class Utils
             }
         }
         return result;
+    }
+
+    public static bool contains(this IEnumerable<JProperty> source, string id)
+    {
+        foreach (JProperty t in source)
+        {
+            if (t.Name == id)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static string RemoveTabbing(this string fmt)
+    {
+        return string.Join(
+            System.Environment.NewLine,
+            fmt.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(fooline => fooline.Trim()));
+    }
+
+    public static string GetOptionValue(this KeyValuePair<string, string>[] options, string valueToSearch)
+    {
+        foreach (var option in options)
+        {
+            if (option.Key == valueToSearch)
+            {
+                return option.Value;
+            }
+        }
+        return String.Empty;
+    }
+    public static bool Contains(this KeyValuePair<string, string>[] options, string valueToSearch)
+    {
+        foreach (var option in options)
+        {
+            if (option.Key == valueToSearch)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

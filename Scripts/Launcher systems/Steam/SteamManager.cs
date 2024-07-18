@@ -1,3 +1,39 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b0f2dbd0a09a1b3b05955431c2cbe35c21cac43a2d1dab30401580200fbcc14c
-size 811
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+#if !UWP
+using Steamworks;
+#endif
+
+/// <b>Authors</b>
+/// <br>Arad Bozorgmehr (Vrglab)</br>
+public class SteamManager : Instancable<SteamManager>
+{
+    public static uint appId { get; } = 480;
+#if !UWP
+    public void Awake()
+    {
+        base.Awake();
+        if (SteamClient.RestartAppIfNecessary(appId))
+        {
+#if !DEBUG
+            Application.Quit();
+#endif
+        }
+        if(!SteamClient.IsValid)
+            SteamClient.Init(appId);
+    }
+
+    private void Update()
+    {
+        if (SteamClient.IsValid)
+            SteamClient.RunCallbacks();
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (SteamClient.IsValid)
+            SteamClient.Shutdown();
+    }
+#endif
+}

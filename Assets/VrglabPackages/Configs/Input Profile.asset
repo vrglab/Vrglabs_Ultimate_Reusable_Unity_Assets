@@ -1,0 +1,210 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c4aa6e5632c7c64dbce9a4cab7e00b0, type: 3}
+  m_Name: Input Profile
+  m_EditorClassIdentifier: 
+  RelativeIconMappings: {fileID: 11400000, guid: 9c6e1f7920ea7ef4d94f3ebb30c0ea62, type: 2}
+  inputData:
+  - ActionID: dev_int_ui
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: e874b1ab-4e34-4654-be26-b69f09a800bd
+        m_Path: <Keyboard>/v
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 0
+      m_Flags: 0
+  - ActionID: pl_mv_x
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 1D Axis
+        m_Id: 3b5742cf-4d2d-4aa8-ba93-cf41c709f9d7
+        m_Path: 1DAxis
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 4
+      - m_Name: negative
+        m_Id: 9423c8a0-069c-482f-af8d-a89f41b7d7fa
+        m_Path: <Keyboard>/d
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 8
+      - m_Name: positive
+        m_Id: 901642a7-c2ff-41de-af58-4cc2b5611baa
+        m_Path: <Keyboard>/a
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 8
+      m_Flags: 0
+  - ActionID: pl_mv_y
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 1D Axis
+        m_Id: 357b87ee-68da-4064-9955-3bebb1f3bbf0
+        m_Path: 1DAxis
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 4
+      - m_Name: negative
+        m_Id: 13db3afb-1f19-485e-a594-730e7f5c435d
+        m_Path: <Keyboard>/w
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 8
+      - m_Name: positive
+        m_Id: aa7bf04a-8f32-437f-aa7b-c2bf59657c2e
+        m_Path: <Keyboard>/s
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 8
+      m_Flags: 0
+  - ActionID: pl_mv_dash
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 14d522fa-7738-43fa-9a0d-966fc1532edb
+        m_Path: <Keyboard>/shift
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 0
+      m_Flags: 0
+  - ActionID: pl_mv_run
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 14d522fa-7738-43fa-9a0d-966fc1532edb
+        m_Path: <Keyboard>/ctrl
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 0
+      m_Flags: 0
+  - ActionID: pl_mv_jump
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 14d522fa-7738-43fa-9a0d-966fc1532edb
+        m_Path: <Keyboard>/space
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 0
+      m_Flags: 0
+  - ActionID: pickup_weapon
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 14d522fa-7738-43fa-9a0d-966fc1532edb
+        m_Path: <Keyboard>/e
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 0
+      m_Flags: 0
+  - ActionID: drop_weapon
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 14d522fa-7738-43fa-9a0d-966fc1532edb
+        m_Path: <Keyboard>/q
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 0
+      m_Flags: 0
+  - ActionID: shoot_weapon
+    Bindings:
+      m_Name: Bindings
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 82ee6dc1-bcdc-4d02-bd25-62dcdd38232d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 14d522fa-7738-43fa-9a0d-966fc1532edb
+        m_Path: <Mouse>/leftButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Bindings
+        m_Flags: 0
+      m_Flags: 0
